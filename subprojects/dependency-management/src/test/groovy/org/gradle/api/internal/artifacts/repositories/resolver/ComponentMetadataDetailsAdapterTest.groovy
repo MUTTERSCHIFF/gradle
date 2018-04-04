@@ -40,8 +40,8 @@ import static org.gradle.internal.component.external.model.DefaultModuleComponen
 
 class ComponentMetadataDetailsAdapterTest extends Specification {
     private instantiator = DirectInstantiator.INSTANCE
-    private dependencyMetadataNotationParser = DependencyMetadataNotationParser.parser(instantiator, DirectDependencyMetadataImpl.class)
-    private dependencyConstraintMetadataNotationParser = DependencyMetadataNotationParser.parser(instantiator, DependencyConstraintMetadataImpl.class)
+    private dependencyMetadataNotationParser = DependencyMetadataNotationParser.parser(TestUtil.attributesFactory(), instantiator, DirectDependencyMetadataImpl.class)
+    private dependencyConstraintMetadataNotationParser = DependencyMetadataNotationParser.parser(TestUtil.attributesFactory(), instantiator, DependencyConstraintMetadataImpl.class)
 
     def versionIdentifier = new DefaultModuleVersionIdentifier("org.test", "producer", "1.0")
     def componentIdentifier = DefaultModuleComponentIdentifier.newId(versionIdentifier)

@@ -18,16 +18,17 @@ package org.gradle.api.internal.notations;
 
 import org.gradle.api.artifacts.DependencyConstraint;
 import org.gradle.api.internal.artifacts.dependencies.DefaultDependencyConstraint;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 import org.gradle.internal.reflect.Instantiator;
 import org.gradle.internal.typeconversion.NotationParser;
 import org.gradle.internal.typeconversion.NotationParserBuilder;
 
 public class DependencyConstraintNotationParser {
-    public static NotationParser<Object, DependencyConstraint> parser(Instantiator instantiator) {
+    public static NotationParser<Object, DependencyConstraint> parser(ImmutableAttributesFactory attributesFactory, Instantiator instantiator) {
         return NotationParserBuilder
             .toType(DependencyConstraint.class)
-            .fromCharSequence(new DependencyStringNotationConverter<DefaultDependencyConstraint>(instantiator, DefaultDependencyConstraint.class))
-            .converter(new DependencyMapNotationConverter<DefaultDependencyConstraint>(instantiator, DefaultDependencyConstraint.class))
+            .fromCharSequence(new DependencyStringNotationConverter<DefaultDependencyConstraint>(attributesFactory, instantiator, DefaultDependencyConstraint.class))
+            .converter(new DependencyMapNotationConverter<DefaultDependencyConstraint>(attributesFactory, instantiator, DefaultDependencyConstraint.class))
             .invalidNotationMessage("Comprehensive documentation on dependency notations is available in DSL reference for DependencyHandler type.")
             .toComposite();
     }

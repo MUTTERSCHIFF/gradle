@@ -19,6 +19,7 @@ package org.gradle.api.internal.artifacts.dependencies;
 import org.gradle.api.artifacts.ClientModule;
 import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.artifacts.ModuleDependency;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -27,12 +28,12 @@ public class DefaultClientModule extends AbstractExternalModuleDependency implem
 
     private Set<ModuleDependency> dependencies = new LinkedHashSet<ModuleDependency>();
 
-    public DefaultClientModule(String group, String name, String version) {
-        this(group, name, version, null);
+    public DefaultClientModule(ImmutableAttributesFactory attributesFactory, String group, String name, String version) {
+        this(attributesFactory, group, name, version, null);
     }
 
-    public DefaultClientModule(String group, String name, String version, String configuration) {
-        super(group, name, version, configuration);
+    public DefaultClientModule(ImmutableAttributesFactory attributesFactory, String group, String name, String version, String configuration) {
+        super(attributesFactory, group, name, version, configuration);
     }
 
     public String getId() {
@@ -52,7 +53,7 @@ public class DefaultClientModule extends AbstractExternalModuleDependency implem
     }
 
     public ClientModule copy() {
-        DefaultClientModule copiedClientModule = new DefaultClientModule(getGroup(), getName(), getVersion(), getTargetConfiguration());
+        DefaultClientModule copiedClientModule = new DefaultClientModule(getAttributesFactory(), getGroup(), getName(), getVersion(), getTargetConfiguration());
         copyTo(copiedClientModule);
         for (ModuleDependency dependency : dependencies) {
             copiedClientModule.addDependency(dependency.copy());

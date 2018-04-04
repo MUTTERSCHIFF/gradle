@@ -21,15 +21,18 @@ import org.gradle.api.artifacts.DependencyMetadata;
 import org.gradle.api.artifacts.MutableVersionConstraint;
 import org.gradle.api.artifacts.VersionConstraint;
 import org.gradle.api.internal.artifacts.dependencies.DefaultMutableVersionConstraint;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 import org.gradle.internal.Cast;
 
 public abstract class AbstractDependencyImpl<T extends DependencyMetadata> implements DependencyMetadata<T> {
+    private final ImmutableAttributesFactory attributesFactory;
     private final String group;
     private final String name;
     private MutableVersionConstraint versionConstraint;
     private String reason;
 
-    public AbstractDependencyImpl(String group, String name, String version) {
+    public AbstractDependencyImpl(ImmutableAttributesFactory attributesFactory, String group, String name, String version) {
+        this.attributesFactory = attributesFactory;
         this.group = group;
         this.name = name;
         this.versionConstraint = new DefaultMutableVersionConstraint(version);

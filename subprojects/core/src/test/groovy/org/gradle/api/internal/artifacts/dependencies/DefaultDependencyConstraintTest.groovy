@@ -16,11 +16,12 @@
 package org.gradle.api.internal.artifacts.dependencies
 
 import org.gradle.api.artifacts.DependencyConstraint
+import org.gradle.util.TestUtil
 import spock.lang.Specification
 
 class DefaultDependencyConstraintTest extends Specification {
 
-    private DependencyConstraint dependencyConstraint = new DefaultDependencyConstraint("org.gradle", "gradle-core", "4.4-beta2")
+    private DependencyConstraint dependencyConstraint = new DefaultDependencyConstraint(TestUtil.attributesFactory(), "org.gradle", "gradle-core", "4.4-beta2")
 
     void "has reasonable default values"() {
         expect:
@@ -34,12 +35,16 @@ class DefaultDependencyConstraintTest extends Specification {
 
     void "knows if is equal to"() {
         expect:
-        new DefaultDependencyConstraint("group1", "name1", "version1") == new DefaultDependencyConstraint("group1", "name1", "version1")
-        new DefaultDependencyConstraint("group1", "name1", "version1").hashCode() == new DefaultDependencyConstraint("group1", "name1", "version1").hashCode()
-        new DefaultDependencyConstraint("group1", "name1", "version1") != new DefaultDependencyConstraint("group1", "name1", "version2")
-        new DefaultDependencyConstraint("group1", "name1", "version1") != new DefaultDependencyConstraint("group1", "name2", "version1")
-        new DefaultDependencyConstraint("group1", "name1", "version1") != new DefaultDependencyConstraint("group2", "name1", "version1")
-        new DefaultDependencyConstraint("group1", "name1", "version1") != new DefaultDependencyConstraint("group2", "name1", "version1")
+        constraint("group1", "name1", "version1") == constraint("group1", "name1", "version1")
+        constraint("group1", "name1", "version1").hashCode() == constraint("group1", "name1", "version1").hashCode()
+        constraint("group1", "name1", "version1") != constraint("group1", "name1", "version2")
+        constraint("group1", "name1", "version1") != constraint("group1", "name2", "version1")
+        constraint("group1", "name1", "version1") != constraint("group2", "name1", "version1")
+        constraint("group1", "name1", "version1") != constraint("group2", "name1", "version1")
+    }
+
+    DefaultDependencyConstraint constraint(String group, String name, String version) {
+        return new DefaultDependencyConstraint(TestUtil.attributesFactory(), group, name, version)
     }
 
     def "creates deep copy"() {

@@ -23,31 +23,35 @@ import org.gradle.api.artifacts.ModuleVersionIdentifier;
 import org.gradle.api.artifacts.MutableVersionConstraint;
 import org.gradle.api.artifacts.VersionConstraint;
 import org.gradle.api.internal.artifacts.ModuleVersionSelectorStrictSpec;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 
 import javax.annotation.Nullable;
 
 public class DefaultDependencyConstraint implements DependencyConstraint {
 
-    public static DefaultDependencyConstraint strictConstraint(String group, String name, String version) {
-        return new DefaultDependencyConstraint(group, name, new DefaultMutableVersionConstraint(version, true));
+    public static DefaultDependencyConstraint strictConstraint(ImmutableAttributesFactory attributesFactory, String group, String name, String version) {
+        return new DefaultDependencyConstraint(attributesFactory, group, name, new DefaultMutableVersionConstraint(version, true));
     }
 
     private final String group;
     private final String name;
     private final MutableVersionConstraint versionConstraint;
+    private final ImmutableAttributesFactory attributesFactory;
 
     private String reason;
 
-    public DefaultDependencyConstraint(String group, String name, String version) {
+    public DefaultDependencyConstraint(ImmutableAttributesFactory attributesFactory, String group, String name, String version) {
         this.group = group;
         this.name = name;
         this.versionConstraint = new DefaultMutableVersionConstraint(version);
+        this.attributesFactory = attributesFactory;
     }
 
-    private DefaultDependencyConstraint(String group, String name, MutableVersionConstraint versionConstraint) {
+    private DefaultDependencyConstraint(ImmutableAttributesFactory attributesFactory, String group, String name, MutableVersionConstraint versionConstraint) {
         this.group = group;
         this.name = name;
         this.versionConstraint = versionConstraint;
+        this.attributesFactory = attributesFactory;
     }
 
     @Nullable
@@ -124,7 +128,7 @@ public class DefaultDependencyConstraint implements DependencyConstraint {
     }
 
     public DependencyConstraint copy() {
-        DefaultDependencyConstraint constraint = new DefaultDependencyConstraint(group, name, versionConstraint);
+        DefaultDependencyConstraint constraint = new DefaultDependencyConstraint(attributesFactory, group, name, versionConstraint);
         constraint.reason = reason;
         return constraint;
     }

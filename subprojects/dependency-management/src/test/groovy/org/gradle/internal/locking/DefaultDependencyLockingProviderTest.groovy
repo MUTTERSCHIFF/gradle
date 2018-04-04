@@ -27,6 +27,7 @@ import org.gradle.api.internal.file.FileResolver
 import org.gradle.internal.component.external.model.DefaultModuleComponentIdentifier
 import org.gradle.test.fixtures.file.TestFile
 import org.gradle.test.fixtures.file.TestNameTestDirectoryProvider
+import org.gradle.util.TestUtil
 import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Subject
@@ -47,14 +48,14 @@ class DefaultDependencyLockingProviderTest extends Specification {
 
     def setup() {
         resolver.resolve(LockFileReaderWriter.DEPENDENCY_LOCKING_FOLDER) >> lockDir
-        provider = new DefaultDependencyLockingProvider(resolver, startParameter)
+        provider = new DefaultDependencyLockingProvider(resolver, startParameter, TestUtil.attributesFactory())
     }
 
     def 'can persist resolved modules as lockfile'() {
         given:
         ResolutionResult resolutionResult = Mock()
         startParameter.isWriteDependencyLocks() >> true
-        provider = new DefaultDependencyLockingProvider(resolver, startParameter)
+        provider = new DefaultDependencyLockingProvider(resolver, startParameter, TestUtil.attributesFactory())
         def modules = [module('org', 'foo', '1.0'), module('org','bar','1.3')] as Set
         resolutionResult.getAllComponents() >> modules
 
@@ -76,7 +77,7 @@ org:foo:1.0
         def result = provider.findLockedDependencies('conf')
 
         then:
-        result == [strictConstraint('org', 'bar', '1.3'), strictConstraint('org', 'foo', '1.0')] as Set
+        result == [strictConstraint(TestUtil.attributesFactory(),'org', 'bar', '1.3'), strictConstraint(TestUtil.attributesFactory(),'org', 'foo', '1.0')] as Set
     }
 
     def 'fails with invalid content in lock file'() {

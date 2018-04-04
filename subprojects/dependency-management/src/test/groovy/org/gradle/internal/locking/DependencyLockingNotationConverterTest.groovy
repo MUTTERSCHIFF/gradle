@@ -18,6 +18,7 @@ package org.gradle.internal.locking
 
 import org.gradle.api.artifacts.DependencyConstraint
 import org.gradle.internal.component.external.model.DefaultModuleComponentIdentifier
+import org.gradle.util.TestUtil
 import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.Unroll
@@ -25,7 +26,7 @@ import spock.lang.Unroll
 class DependencyLockingNotationConverterTest extends Specification {
 
     @Subject
-    def converter = new DependencyLockingNotationConverter()
+    def converter = new DependencyLockingNotationConverter(TestUtil.attributesFactory())
 
     def 'converts a lock notation to a strict dependency constraint'() {
         given:

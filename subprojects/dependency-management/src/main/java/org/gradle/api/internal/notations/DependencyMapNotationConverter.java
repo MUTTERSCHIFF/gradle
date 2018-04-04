@@ -17,6 +17,7 @@ package org.gradle.api.internal.notations;
 
 import org.gradle.api.artifacts.ExternalDependency;
 import org.gradle.api.internal.artifacts.dsl.dependencies.ModuleFactoryHelper;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 import org.gradle.api.tasks.Optional;
 import org.gradle.internal.exceptions.DiagnosticsVisitor;
 import org.gradle.internal.reflect.Instantiator;
@@ -25,10 +26,12 @@ import org.gradle.internal.typeconversion.MapNotationConverter;
 
 public class DependencyMapNotationConverter<T> extends MapNotationConverter<T> {
 
+    private final ImmutableAttributesFactory attributesFactory;
     private final Instantiator instantiator;
     private final Class<T> resultingType;
 
-    public DependencyMapNotationConverter(Instantiator instantiator, Class<T> resultingType) {
+    public DependencyMapNotationConverter(ImmutableAttributesFactory attributesFactory, Instantiator instantiator, Class<T> resultingType) {
+        this.attributesFactory = attributesFactory;
         this.instantiator = instantiator;
         this.resultingType = resultingType;
     }
@@ -46,9 +49,9 @@ public class DependencyMapNotationConverter<T> extends MapNotationConverter<T> {
                          @MapKey("classifier") @Optional String classifier) {
         T dependency;
         if (configuration == null) {
-            dependency = instantiator.newInstance(resultingType, group, name, version);
+            dependency = instantiator.newInstance(resultingType, attributesFactory, group, name, version);
         } else {
-            dependency = instantiator.newInstance(resultingType, group, name, version, configuration);
+            dependency = instantiator.newInstance(resultingType, attributesFactory, group, name, version, configuration);
         }
         if (dependency instanceof ExternalDependency) {
             ModuleFactoryHelper.addExplicitArtifactsIfDefined((ExternalDependency) dependency, ext, classifier);

@@ -19,6 +19,7 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import org.gradle.api.Action;
 import org.gradle.api.Incubating;
+import org.gradle.api.attributes.AttributeContainer;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -156,4 +157,25 @@ public interface ModuleDependency extends Dependency {
      */
     ModuleDependency copy();
 
+    /**
+     * Returns the attributes for this dependency. Mutation of the attributes of a dependency must be done through
+     * the {@link #attributes(Action)} method.
+     *
+     * @return the attributes container for this dependency
+     *
+     * @since 4.8
+     */
+    @Incubating
+    AttributeContainer getAttributes();
+
+    /**
+     * Mutates the attributes of this dependency. Attributes are used during dependency resolution to select the appropriate
+     * target variant, in particular when a single component provides different variants.
+     *
+     * @param configureAction the attributes mutation action
+     *
+     * @since 4.8
+     */
+    @Incubating
+    void attributes(Action<? super AttributeContainer> configureAction);
 }

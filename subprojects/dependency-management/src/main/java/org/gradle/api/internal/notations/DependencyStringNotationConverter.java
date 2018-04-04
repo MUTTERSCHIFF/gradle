@@ -20,6 +20,7 @@ import org.gradle.api.artifacts.ClientModule;
 import org.gradle.api.artifacts.ExternalDependency;
 import org.gradle.api.internal.artifacts.dsl.ParsedModuleStringNotation;
 import org.gradle.api.internal.artifacts.dsl.dependencies.ModuleFactoryHelper;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 import org.gradle.internal.exceptions.DiagnosticsVisitor;
 import org.gradle.internal.reflect.Instantiator;
 import org.gradle.internal.typeconversion.NotationConvertResult;
@@ -27,10 +28,12 @@ import org.gradle.internal.typeconversion.NotationConverter;
 import org.gradle.internal.typeconversion.TypeConversionException;
 
 public class DependencyStringNotationConverter<T> implements NotationConverter<String, T> {
+    private final ImmutableAttributesFactory attributesFactory;
     private final Instantiator instantiator;
     private final Class<T> wantedType;
 
-    public DependencyStringNotationConverter(Instantiator instantiator, Class<T> wantedType) {
+    public DependencyStringNotationConverter(ImmutableAttributesFactory attributesFactory, Instantiator instantiator, Class<T> wantedType) {
+        this.attributesFactory = attributesFactory;
         this.instantiator = instantiator;
         this.wantedType = wantedType;
     }
@@ -48,7 +51,7 @@ public class DependencyStringNotationConverter<T> implements NotationConverter<S
 
         ParsedModuleStringNotation parsedNotation = splitModuleFromExtension(notation);
         T moduleDependency = instantiator.newInstance(wantedType,
-            parsedNotation.getGroup(), parsedNotation.getName(), parsedNotation.getVersion());
+            attributesFactory, parsedNotation.getGroup(), parsedNotation.getName(), parsedNotation.getVersion());
         if (moduleDependency instanceof ExternalDependency) {
             ModuleFactoryHelper.addExplicitArtifactsIfDefined((ExternalDependency) moduleDependency, parsedNotation.getArtifactType(), parsedNotation.getClassifier());
         }

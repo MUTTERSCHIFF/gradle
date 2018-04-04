@@ -19,10 +19,12 @@ package org.gradle.api.internal.artifacts.dependencies
 import org.gradle.api.artifacts.ExternalDependency
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.internal.artifacts.DependencyResolveContext
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.api.internal.tasks.TaskDependencyResolveContext
 import org.gradle.initialization.ProjectAccessListener
 import org.gradle.internal.exceptions.ConfigurationNotConsumableException
+import org.gradle.internal.service.ServiceRegistry
 import org.gradle.test.fixtures.AbstractProjectBuilderSpec
 
 import static org.gradle.api.internal.artifacts.dependencies.AbstractModuleDependencySpec.assertDeepCopy
@@ -190,7 +192,15 @@ class DefaultProjectDependencyTest extends AbstractProjectBuilderSpec {
         out
     }
 
+    ServiceRegistry services() {
+        Mock(ServiceRegistry) {
+            get(_) >> Mock(ImmutableAttributesFactory)
+        }
+    }
+
     void "knows if is equal"() {
+        project.getServices() >> services()
+
         expect:
         assertThat(new DefaultProjectDependency(project, listener, true),
                 strictlyEqual(new DefaultProjectDependency(project, listener, true)))
@@ -202,7 +212,9 @@ class DefaultProjectDependencyTest extends AbstractProjectBuilderSpec {
         def base = new DefaultProjectDependency(project, "conf1", listener, true)
         def differentConf = new DefaultProjectDependency(project, "conf2", listener, true)
         def differentBuildDeps = new DefaultProjectDependency(project, "conf1", listener, false)
-        def differentProject = new DefaultProjectDependency(Mock(ProjectInternal), "conf1", listener, true)
+        def differentProject = new DefaultProjectDependency(Mock(ProjectInternal) {
+            getServices() >> services()
+        }, "conf1", listener, true)
 
         then:
         base != differentConf

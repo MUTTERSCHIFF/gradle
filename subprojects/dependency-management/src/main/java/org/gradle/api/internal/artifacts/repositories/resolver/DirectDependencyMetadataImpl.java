@@ -17,10 +17,11 @@
 package org.gradle.api.internal.artifacts.repositories.resolver;
 
 import org.gradle.api.artifacts.DirectDependencyMetadata;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 
 public class DirectDependencyMetadataImpl extends AbstractDependencyImpl<DirectDependencyMetadata> implements DirectDependencyMetadata {
 
-    public DirectDependencyMetadataImpl(String group, String name, String version) {
-        super(group, name, version);
+    public DirectDependencyMetadataImpl(ImmutableAttributesFactory attributesFactory, String group, String name, String version) {
+        super(attributesFactory, group, name, version);
     }
 }

@@ -21,7 +21,11 @@ import org.gradle.api.Action;
 import org.gradle.api.artifacts.DependencyArtifact;
 import org.gradle.api.artifacts.ExcludeRule;
 import org.gradle.api.artifacts.ModuleDependency;
+import org.gradle.api.attributes.AttributeContainer;
 import org.gradle.api.internal.artifacts.DefaultExcludeRuleContainer;
+import org.gradle.api.internal.attributes.AttributeContainerInternal;
+import org.gradle.api.internal.attributes.ImmutableAttributes;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 import org.gradle.internal.Actions;
 import org.gradle.internal.ImmutableActionSet;
 
@@ -33,15 +37,18 @@ import java.util.Set;
 import static org.gradle.util.ConfigureUtil.configureUsing;
 
 public abstract class AbstractModuleDependency extends AbstractDependency implements ModuleDependency {
+    private final ImmutableAttributesFactory attributesFactory;
     private DefaultExcludeRuleContainer excludeRuleContainer = new DefaultExcludeRuleContainer();
     private Set<DependencyArtifact> artifacts = new HashSet<DependencyArtifact>();
     private Action<? super ModuleDependency> onMutate = Actions.doNothing();
+    private AttributeContainerInternal attributes;
 
     @Nullable
     private String configuration;
     private boolean transitive = true;
 
-    protected AbstractModuleDependency(@Nullable String configuration) {
+    protected AbstractModuleDependency(ImmutableAttributesFactory attributesFactory, @Nullable String configuration) {
+        this.attributesFactory = attributesFactory;
         this.configuration = configuration;
     }
 
@@ -111,6 +118,7 @@ public abstract class AbstractModuleDependency extends AbstractDependency implem
         target.setArtifacts(new HashSet<DependencyArtifact>(getArtifacts()));
         target.setExcludeRuleContainer(new DefaultExcludeRuleContainer(getExcludeRules()));
         target.setTransitive(isTransitive());
+        target.setAttributes(attributes);
     }
 
     protected boolean isKeyEquals(ModuleDependency dependencyRhs) {
@@ -138,15 +146,38 @@ public abstract class AbstractModuleDependency extends AbstractDependency implem
         if (isTransitive() != dependencyRhs.isTransitive()) {
             return false;
         }
-        if (getArtifacts() != null ? !getArtifacts().equals(dependencyRhs.getArtifacts())
-                : dependencyRhs.getArtifacts() != null) {
+        if (!Objects.equal(getArtifacts(), dependencyRhs.getArtifacts())) {
             return false;
         }
-        if (getExcludeRules() != null ? !getExcludeRules().equals(dependencyRhs.getExcludeRules())
-                : dependencyRhs.getExcludeRules() != null) {
+        if (!Objects.equal(getExcludeRules(), dependencyRhs.getExcludeRules())) {
+            return false;
+        }
+        if (!Objects.equal(getAttributes(), dependencyRhs.getAttributes())) {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public AttributeContainer getAttributes() {
+        return attributes == null ? ImmutableAttributes.EMPTY : attributes.asImmutable();
+    }
+
+    @Override
+    public void attributes(Action<? super AttributeContainer> configureAction) {
+        validateMutation();
+        if (attributes == null) {
+            attributes = attributesFactory.mutable();
+        }
+        configureAction.execute(attributes);
+    }
+
+    protected ImmutableAttributesFactory getAttributesFactory() {
+        return attributesFactory;
+    }
+
+    void setAttributes(AttributeContainerInternal attributes) {
+        this.attributes = attributes;
     }
 
     @SuppressWarnings("unchecked")

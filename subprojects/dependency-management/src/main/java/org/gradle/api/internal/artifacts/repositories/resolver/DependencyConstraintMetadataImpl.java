@@ -17,10 +17,11 @@
 package org.gradle.api.internal.artifacts.repositories.resolver;
 
 import org.gradle.api.artifacts.DependencyConstraintMetadata;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 
 public class DependencyConstraintMetadataImpl extends AbstractDependencyImpl<DependencyConstraintMetadata> implements DependencyConstraintMetadata {
 
-    public DependencyConstraintMetadataImpl(String group, String name, String version) {
-        super(group, name, version);
+    public DependencyConstraintMetadataImpl(ImmutableAttributesFactory attributesFactory, String group, String name, String version) {
+        super(attributesFactory, group, name, version);
     }
 }

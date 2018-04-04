@@ -21,6 +21,7 @@ import org.gradle.api.internal.notations.DependencyMetadataNotationParser
 import org.gradle.internal.component.external.model.GradleDependencyMetadata
 import org.gradle.internal.component.model.DependencyMetadata
 import org.gradle.internal.reflect.DirectInstantiator
+import org.gradle.util.TestUtil
 import spock.lang.Specification
 
 import static org.gradle.internal.component.external.model.DefaultModuleComponentSelector.newSelector
@@ -180,7 +181,7 @@ class DependenciesMetadataAdapterTest extends Specification {
 
     class TestDependenciesMetadataAdapter extends AbstractDependenciesMetadataAdapter {
         TestDependenciesMetadataAdapter(List<DependencyMetadata> dependenciesMetadata) {
-            super(dependenciesMetadata, DirectInstantiator.INSTANCE, DependencyMetadataNotationParser.parser(DirectInstantiator.INSTANCE, DirectDependencyMetadataImpl.class))
+            super(dependenciesMetadata, DirectInstantiator.INSTANCE, DependencyMetadataNotationParser.parser(TestUtil.attributesFactory(), DirectInstantiator.INSTANCE, DirectDependencyMetadataImpl.class))
         }
 
         @Override

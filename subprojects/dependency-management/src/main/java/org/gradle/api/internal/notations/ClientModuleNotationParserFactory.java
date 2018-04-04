@@ -17,6 +17,7 @@ package org.gradle.api.internal.notations;
 
 import org.gradle.api.artifacts.ClientModule;
 import org.gradle.api.internal.artifacts.dependencies.DefaultClientModule;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 import org.gradle.internal.Factory;
 import org.gradle.internal.reflect.Instantiator;
 import org.gradle.internal.typeconversion.NotationParser;
@@ -24,16 +25,18 @@ import org.gradle.internal.typeconversion.NotationParserBuilder;
 
 public class ClientModuleNotationParserFactory implements Factory<NotationParser<Object, ClientModule>> {
 
+    private final ImmutableAttributesFactory attributesFactory;
     private final Instantiator instantiator;
 
-    public ClientModuleNotationParserFactory(Instantiator instantiator) {
+    public ClientModuleNotationParserFactory(ImmutableAttributesFactory attributesFactory, Instantiator instantiator) {
+        this.attributesFactory = attributesFactory;
         this.instantiator = instantiator;
     }
 
     public NotationParser<Object, ClientModule> create() {
         return NotationParserBuilder.toType(ClientModule.class)
-                .fromCharSequence(new DependencyStringNotationConverter<DefaultClientModule>(instantiator, DefaultClientModule.class))
-                .converter(new DependencyMapNotationConverter<DefaultClientModule>(instantiator, DefaultClientModule.class))
+                .fromCharSequence(new DependencyStringNotationConverter<DefaultClientModule>(attributesFactory, instantiator, DefaultClientModule.class))
+                .converter(new DependencyMapNotationConverter<DefaultClientModule>(attributesFactory, instantiator, DefaultClientModule.class))
                 .toComposite();
 
     }

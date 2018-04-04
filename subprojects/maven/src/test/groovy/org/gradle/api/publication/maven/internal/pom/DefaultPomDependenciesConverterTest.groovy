@@ -26,6 +26,7 @@ import org.gradle.api.internal.artifacts.DefaultExcludeRule
 import org.gradle.api.internal.artifacts.dependencies.DefaultDependencyArtifact
 import org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency
 import org.gradle.api.publication.maven.internal.VersionRangeMapper
+import org.gradle.util.TestUtil
 import spock.lang.Issue
 import spock.lang.Specification
 
@@ -90,7 +91,7 @@ public class DefaultPomDependenciesConverterTest extends Specification {
     }
 
     private static createDependency(final String group, final String name, final String version) {
-        return new DefaultExternalModuleDependency(group, name, version);
+        return new DefaultExternalModuleDependency(TestUtil.attributesFactory(), group, name, version);
     }
 
     def init() {

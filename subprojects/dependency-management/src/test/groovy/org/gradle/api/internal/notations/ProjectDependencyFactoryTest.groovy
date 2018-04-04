@@ -19,15 +19,21 @@ package org.gradle.api.internal.notations;
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.internal.artifacts.DefaultProjectDependencyFactory
 import org.gradle.api.internal.artifacts.dsl.dependencies.ProjectFinder
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.initialization.ProjectAccessListener
 import org.gradle.internal.reflect.DirectInstantiator
+import org.gradle.internal.service.ServiceRegistry
 import org.gradle.util.GUtil
 import spock.lang.Specification
 
-public class ProjectDependencyFactoryTest extends Specification {
+class ProjectDependencyFactoryTest extends Specification {
 
-    def projectDummy = Mock(ProjectInternal)
+    def projectDummy = Mock(ProjectInternal) {
+        getServices() >> Mock(ServiceRegistry) {
+            get(_) >> Mock(ImmutableAttributesFactory)
+        }
+    }
     def projectFinder = Mock(ProjectFinder)
 
     def depFactory = new DefaultProjectDependencyFactory(Mock(ProjectAccessListener), DirectInstantiator.INSTANCE, true)

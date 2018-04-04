@@ -1609,7 +1609,7 @@ All Artifacts:
     }
 
     private dependency(String group, String name, String version) {
-        new DefaultExternalModuleDependency(group, name, version);
+        new DefaultExternalModuleDependency(TestUtil.attributesFactory(), group, name, version);
     }
 
     private DefaultConfiguration conf(String confName = "conf", String projectPath = ":", String buildPath = ":") {

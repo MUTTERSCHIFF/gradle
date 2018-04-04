@@ -45,8 +45,8 @@ import static org.gradle.internal.component.external.model.DefaultModuleComponen
 
 abstract class AbstractDependencyMetadataRulesTest extends Specification {
     def instantiator = DirectInstantiator.INSTANCE
-    def notationParser = DependencyMetadataNotationParser.parser(instantiator, DirectDependencyMetadataImpl)
-    def constraintNotationParser = DependencyMetadataNotationParser.parser(instantiator, DependencyConstraintMetadataImpl)
+    def notationParser = DependencyMetadataNotationParser.parser(TestUtil.attributesFactory(), instantiator, DirectDependencyMetadataImpl)
+    def constraintNotationParser = DependencyMetadataNotationParser.parser(TestUtil.attributesFactory(), instantiator, DependencyConstraintMetadataImpl)
 
     @Shared versionIdentifier = new DefaultModuleVersionIdentifier("org.test", "producer", "1.0")
     @Shared componentIdentifier = DefaultModuleComponentIdentifier.newId(versionIdentifier)

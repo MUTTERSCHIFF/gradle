@@ -18,19 +18,20 @@ package org.gradle.api.internal.artifacts.dependencies;
 
 import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.artifacts.ExternalModuleDependency;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 
 public class DefaultExternalModuleDependency extends AbstractExternalModuleDependency implements ExternalModuleDependency {
 
-    public DefaultExternalModuleDependency(String group, String name, String version) {
-        this(group, name, version, null);
+    public DefaultExternalModuleDependency(ImmutableAttributesFactory attributesFactory, String group, String name, String version) {
+        this(attributesFactory, group, name, version, null);
     }
 
-    public DefaultExternalModuleDependency(String group, String name, String version, String configuration) {
-        super(group, name, version, configuration);
+    public DefaultExternalModuleDependency(ImmutableAttributesFactory attributesFactory, String group, String name, String version, String configuration) {
+        super(attributesFactory, group, name, version, configuration);
     }
 
     public DefaultExternalModuleDependency copy() {
-        DefaultExternalModuleDependency copiedModuleDependency = new DefaultExternalModuleDependency(getGroup(), getName(), getVersion(), getTargetConfiguration());
+        DefaultExternalModuleDependency copiedModuleDependency = new DefaultExternalModuleDependency(getAttributesFactory(), getGroup(), getName(), getVersion(), getTargetConfiguration());
         copyTo(copiedModuleDependency);
         return copiedModuleDependency;
     }

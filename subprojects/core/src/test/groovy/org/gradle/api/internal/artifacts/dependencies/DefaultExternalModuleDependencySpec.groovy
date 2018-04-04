@@ -17,10 +17,11 @@
 package org.gradle.api.internal.artifacts.dependencies
 
 import org.gradle.api.artifacts.ExternalModuleDependency
+import org.gradle.util.TestUtil
 
 class DefaultExternalModuleDependencySpec extends AbstractModuleDependencySpec {
 
     protected ExternalModuleDependency createDependency(String group, String name, String version, String configuration) {
-        new DefaultExternalModuleDependency(group, name, version, configuration)
+        new DefaultExternalModuleDependency(TestUtil.attributesFactory(), group, name, version, configuration)
     }
 }

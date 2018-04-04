@@ -114,8 +114,8 @@ class DefaultConfigurationContainerSpec extends Specification {
     def "creates detached"() {
         given:
         1 * domainObjectContext.projectPath("detachedConfiguration1") >> Path.path(":detachedConfiguration1")
-        def dependency1 = new DefaultExternalModuleDependency("group", "name", "version")
-        def dependency2 = new DefaultExternalModuleDependency("group", "name2", "version")
+        def dependency1 = new DefaultExternalModuleDependency(TestUtil.attributesFactory(),"group", "name", "version")
+        def dependency2 = new DefaultExternalModuleDependency(TestUtil.attributesFactory(),"group", "name2", "version")
 
         when:
         def detached = configurationContainer.detachedConfiguration(dependency1, dependency2);

@@ -33,8 +33,8 @@ public class ModuleFactoryDelegateTest {
     private JUnit4Mockery context = new JUnit4Mockery();
 
     private DependencyFactory dependencyFactoryStub = context.mock(DependencyFactory.class);
-    private ClientModule clientModule = new DefaultClientModule("junit", "junit", "4.4");
-    
+    private ClientModule clientModule = new DefaultClientModule(TestUtil.attributesFactory(), "junit", "junit", "4.4");
+
     private ModuleFactoryDelegate moduleFactoryDelegate = new ModuleFactoryDelegate(clientModule, dependencyFactoryStub);
 
     @Test

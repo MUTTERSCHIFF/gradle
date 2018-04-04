@@ -19,8 +19,15 @@ package org.gradle.internal.locking;
 import org.gradle.api.artifacts.DependencyConstraint;
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier;
 import org.gradle.api.internal.artifacts.dependencies.DefaultDependencyConstraint;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 
 class DependencyLockingNotationConverter {
+
+    private final ImmutableAttributesFactory attributesFactory;
+
+    DependencyLockingNotationConverter(ImmutableAttributesFactory attributesFactory) {
+        this.attributesFactory = attributesFactory;
+    }
 
     DependencyConstraint convertToDependencyConstraint(String module) {
         int groupNameSeparatorIndex = module.indexOf(':');
@@ -28,9 +35,11 @@ class DependencyLockingNotationConverter {
         if (groupNameSeparatorIndex < 0 || nameVersionSeparatorIndex == groupNameSeparatorIndex) {
             throw new IllegalArgumentException("The module notation does not respect the lock file format of 'group:name:version' - received '" + module + "'");
         }
-        DefaultDependencyConstraint constraint = DefaultDependencyConstraint.strictConstraint(module.substring(0, groupNameSeparatorIndex),
-                                                                                            module.substring(groupNameSeparatorIndex + 1, nameVersionSeparatorIndex),
-                                                                                            module.substring(nameVersionSeparatorIndex + 1));
+        DefaultDependencyConstraint constraint = DefaultDependencyConstraint.strictConstraint(
+            attributesFactory,
+            module.substring(0, groupNameSeparatorIndex),
+            module.substring(groupNameSeparatorIndex + 1, nameVersionSeparatorIndex),
+            module.substring(nameVersionSeparatorIndex + 1));
 
         constraint.because("dependency was locked to version " + constraint.getVersion());
 

@@ -20,11 +20,12 @@ package org.gradle.api.internal.artifacts.dependencies
 
 import org.gradle.api.artifacts.ExternalModuleDependency
 import org.gradle.api.artifacts.ModuleDependency
+import org.gradle.util.TestUtil
 
 class ClientModuleDependencySpec extends AbstractModuleDependencySpec {
 
     protected ExternalModuleDependency createDependency(String group, String name, String version, String configuration) {
-        new DefaultClientModule(group, name, version, configuration)
+        new DefaultClientModule(TestUtil.attributesFactory(), group, name, version, configuration)
     }
 
     def "equals but content not equal with different module dependencies"() {

@@ -25,6 +25,7 @@ import org.gradle.api.internal.artifacts.VersionConstraintInternal;
 import org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency;
 import org.gradle.internal.component.local.model.OpaqueComponentIdentifier;
 import org.gradle.internal.component.model.LocalOriginDependencyMetadata;
+import org.gradle.util.TestUtil;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
@@ -46,7 +47,7 @@ public class ExternalModuleDependencyDescriptorFactoryTest extends AbstractDepen
 
     @Test
     public void testAddWithNullGroupAndNullVersionShouldHaveEmptyStringModuleRevisionValues() {
-        ModuleDependency dependency = new DefaultExternalModuleDependency(null, "gradle-core", null, TEST_DEP_CONF);
+        ModuleDependency dependency = new DefaultExternalModuleDependency(TestUtil.attributesFactory(), null, "gradle-core", null, TEST_DEP_CONF);
         LocalOriginDependencyMetadata dependencyMetaData = externalModuleDependencyDescriptorFactory.createDependencyDescriptor(componentId, TEST_CONF, null, dependency);
         ModuleComponentSelector selector = (ModuleComponentSelector) dependencyMetaData.getSelector();
         assertThat(selector.getGroup(), equalTo(""));
@@ -57,8 +58,12 @@ public class ExternalModuleDependencyDescriptorFactoryTest extends AbstractDepen
 
     @Test
     public void testCreateFromModuleDependency() {
-        DefaultExternalModuleDependency moduleDependency = new DefaultExternalModuleDependency("org.gradle",
-                "gradle-core", "1.0", TEST_DEP_CONF);
+        DefaultExternalModuleDependency moduleDependency = new DefaultExternalModuleDependency(
+            TestUtil.attributesFactory(),
+            "org.gradle",
+            "gradle-core",
+            "1.0",
+            TEST_DEP_CONF);
         setUpDependency(moduleDependency);
 
         LocalOriginDependencyMetadata dependencyMetaData = externalModuleDependencyDescriptorFactory.createDependencyDescriptor(componentId, TEST_CONF, null, moduleDependency);

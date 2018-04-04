@@ -28,6 +28,7 @@ import org.gradle.api.internal.artifacts.DependencyResolutionServices;
 import org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency;
 import org.gradle.api.internal.artifacts.ivyservice.ivyresolve.strategy.VersionSelectorScheme;
 import org.gradle.api.internal.artifacts.repositories.ArtifactRepositoryInternal;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 import org.gradle.plugin.management.internal.InvalidPluginRequestException;
 import org.gradle.plugin.management.internal.PluginRequestInternal;
 import org.gradle.plugin.use.PluginId;
@@ -122,11 +123,12 @@ public class ArtifactRepositoriesPluginResolver implements PluginResolver {
 
     private ModuleDependency getMarkerDependency(PluginRequestInternal pluginRequest) {
         ModuleVersionSelector selector = pluginRequest.getModule();
+        ImmutableAttributesFactory attributesFactory = resolution.getAttributesFactory();
         if (selector == null) {
             String id = pluginRequest.getId().getId();
-            return new DefaultExternalModuleDependency(id, id + PLUGIN_MARKER_SUFFIX, pluginRequest.getVersion());
+            return new DefaultExternalModuleDependency(attributesFactory, id, id + PLUGIN_MARKER_SUFFIX, pluginRequest.getVersion());
         } else {
-            return new DefaultExternalModuleDependency(selector.getGroup(), selector.getName(), selector.getVersion());
+            return new DefaultExternalModuleDependency(attributesFactory, selector.getGroup(), selector.getName(), selector.getVersion());
         }
     }
 

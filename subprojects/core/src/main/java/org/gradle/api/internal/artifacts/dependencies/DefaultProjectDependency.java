@@ -24,6 +24,7 @@ import org.gradle.api.artifacts.DependencyConstraint;
 import org.gradle.api.artifacts.ProjectDependency;
 import org.gradle.api.internal.artifacts.CachingDependencyResolveContext;
 import org.gradle.api.internal.artifacts.DependencyResolveContext;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 import org.gradle.api.internal.project.ProjectInternal;
 import org.gradle.api.internal.tasks.AbstractTaskDependency;
 import org.gradle.api.internal.tasks.TaskDependencyInternal;
@@ -47,7 +48,7 @@ public class DefaultProjectDependency extends AbstractModuleDependency implement
 
     public DefaultProjectDependency(ProjectInternal dependencyProject, String configuration,
                                     ProjectAccessListener projectAccessListener, boolean buildProjectDependencies) {
-        super(configuration);
+        super(dependencyProject.getServices().get(ImmutableAttributesFactory.class), configuration);
         this.dependencyProject = dependencyProject;
         this.projectAccessListener = projectAccessListener;
         this.buildProjectDependencies = buildProjectDependencies;

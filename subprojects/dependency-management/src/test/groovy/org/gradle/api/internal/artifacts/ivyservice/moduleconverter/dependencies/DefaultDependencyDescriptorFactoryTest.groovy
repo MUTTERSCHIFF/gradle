@@ -21,6 +21,7 @@ import org.gradle.api.artifacts.component.ModuleComponentSelector
 import org.gradle.api.internal.artifacts.dependencies.DefaultDependencyConstraint
 import org.gradle.internal.component.local.model.OpaqueComponentIdentifier
 import org.gradle.internal.component.model.LocalOriginDependencyMetadata
+import org.gradle.util.TestUtil
 import spock.lang.Specification
 
 class DefaultDependencyDescriptorFactoryTest extends Specification {
@@ -67,7 +68,7 @@ class DefaultDependencyDescriptorFactoryTest extends Specification {
 
     def "creates descriptor for dependency constraints"() {
         given:
-        def dependencyConstraint = new DefaultDependencyConstraint("g", "m", "1")
+        def dependencyConstraint = new DefaultDependencyConstraint(TestUtil.attributesFactory(), "g", "m", "1")
 
         when:
         def dependencyDescriptorFactory = new DefaultDependencyDescriptorFactory()

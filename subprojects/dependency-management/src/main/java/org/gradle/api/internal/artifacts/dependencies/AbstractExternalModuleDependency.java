@@ -23,6 +23,7 @@ import org.gradle.api.artifacts.ModuleVersionIdentifier;
 import org.gradle.api.artifacts.MutableVersionConstraint;
 import org.gradle.api.artifacts.VersionConstraint;
 import org.gradle.api.internal.artifacts.ModuleVersionSelectorStrictSpec;
+import org.gradle.api.internal.attributes.ImmutableAttributesFactory;
 
 public abstract class AbstractExternalModuleDependency extends AbstractModuleDependency implements ExternalModuleDependency {
     private String group;
@@ -31,8 +32,8 @@ public abstract class AbstractExternalModuleDependency extends AbstractModuleDep
     private boolean force;
     private final MutableVersionConstraint versionConstraint;
 
-    public AbstractExternalModuleDependency(String group, String name, String version, String configuration) {
-        super(configuration);
+    public AbstractExternalModuleDependency(ImmutableAttributesFactory attributesFactory, String group, String name, String version, String configuration) {
+        super(attributesFactory, configuration);
         if (name == null) {
             throw new InvalidUserDataException("Name must not be null!");
         }
